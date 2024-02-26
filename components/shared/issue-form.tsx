@@ -4,6 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import SimpleMDE from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,17 +20,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import { createIssue } from "@/action/action";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 3 characters.",
   }),
   description: z.string().min(10, {
-    message: "Title must be at least 11 characters.",
+    message: "Title must be at least 10 characters.",
   }),
 });
 
 const IssueForm = () => {
+  const router = useRouter();
   const [IsPending, setIsPending] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,9 +50,10 @@ const IssueForm = () => {
         title: values.title,
         description: values.description,
       });
-      console.log(values);
+      // console.log(values);
 
       form.reset();
+      router.push("/dashboard");
     } catch (error) {
       console.log(error);
     } finally {
@@ -89,9 +95,8 @@ const IssueForm = () => {
                 Desciption
               </FormLabel>
               <FormControl className="w-full">
-                <Textarea
+                <SimpleMDE
                   disabled={IsPending}
-                  required
                   className="w-full"
                   placeholder="Desciption..."
                   {...field}
@@ -102,7 +107,7 @@ const IssueForm = () => {
           )}
         />
 
-        <Button className="" disabled={IsPending} type="submit">
+        <Button className="" size="sm" disabled={IsPending} type="submit">
           {IsPending ? "Creating..." : "Create"}
         </Button>
       </form>
