@@ -15,17 +15,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
+import { createIssue } from "@/action/action";
+import { useState } from "react";
 
 const formSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 3 characters.",
   }),
-  description: z.string().min(15, {
-    message: "Title must be at least 2 characters.",
+  description: z.string().min(10, {
+    message: "Title must be at least 11 characters.",
   }),
 });
 
 const IssueForm = () => {
+  const [IsPending, setIsPending] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,11 +38,24 @@ const IssueForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsPending(true);
+      await createIssue({
+        title: values.title,
+        description: values.description,
+      });
+      console.log(values);
+
+      form.reset();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsPending(false);
+    }
   }
+
   return (
-    // <div className="w-full">
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -51,7 +68,13 @@ const IssueForm = () => {
             <FormItem className="max-w-md w-full">
               <FormLabel className="text-black font-medium">Title</FormLabel>
               <FormControl className="w-full">
-                <Input required className="" placeholder="shadcn" {...field} />
+                <Input
+                  disabled={IsPending}
+                  required
+                  className=""
+                  placeholder="Title..."
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -67,9 +90,10 @@ const IssueForm = () => {
               </FormLabel>
               <FormControl className="w-full">
                 <Textarea
+                  disabled={IsPending}
                   required
                   className="w-full"
-                  placeholder="shadcn"
+                  placeholder="Desciption..."
                   {...field}
                 />
               </FormControl>
@@ -78,12 +102,11 @@ const IssueForm = () => {
           )}
         />
 
-        <Button className="" type="submit">
-          Submit
+        <Button className="" disabled={IsPending} type="submit">
+          {IsPending ? "Creating..." : "Create"}
         </Button>
       </form>
     </Form>
-    // </div>
   );
 };
 
