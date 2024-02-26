@@ -53,7 +53,7 @@ const IssueForm = () => {
       // console.log(values);
 
       form.reset();
-      router.push("/dashboard");
+      router.push("/issues");
     } catch (error) {
       console.log(error);
     } finally {

@@ -16,18 +16,18 @@ const ButtonCombo = () => {
           </Button>
         </Link>
       )}
-      {/* {path !== "/issuelist" && (
-        <Link href="/issuelist">
+      {path !== "/issues" && (
+        <Link href="/issues">
           <Button size={"sm"} variant={"link"}>
-            Issues List
+            Issues 📜
           </Button>
         </Link>
-      )} */}
+      )}
 
       {path !== "/createissue" && (
         <Link href="/createissue">
           <Button size={"sm"} variant={"link"}>
-            Create Issue 📃
+            Create Issue 📝
           </Button>
         </Link>
       )}

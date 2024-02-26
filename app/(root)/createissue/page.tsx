@@ -5,7 +5,7 @@ const CreateIssuePage = () => {
   return (
     <div className="w-full flex flex-col items-center">
       <ButtonCombo />
-      <h2>Create Issue</h2>
+      <h2 className="text-xl font-bold mt-3 underline">Create Issue</h2>
 
       <IssueForm />
     </div>
